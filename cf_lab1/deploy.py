@@ -16,30 +16,36 @@ except getopt.error as err:
 #################################################################
 import boto3
 
-PROJECT = "upb-cloudformation"
-
+PROJECT2 = "cloudformation2"
+BUCKET_NAME = f"{PROJECT2}--bucket-123"
 cf = boto3.client('cloudformation')
 
 with open('template.yaml', 'r') as file:
     template = file.read()
     
-if command in ("--create", "-c"):
+if command in ("--create","-c"):
     response = cf.create_stack(
-        StackName=PROJECT,
-        TemplateBody=template
+        StackName = PROJECT2,
+        TemplateBody = template,
+        Parameters=[
+            {
+                'ParameterKey': 'BucketName',
+                'ParameterValue': BUCKET_NAME
+            },
+        ],
     )
-    
+
     print(response)
     
 if command in ("--update", "-u"):
     response = cf.update_stack(
-        StackName=PROJECT,
+        StackName=PROJECT2,
         TemplateBody=template
     )
     print(response)    
 
 if command in ("--delete", "-d"):
     response = cf.delete_stack(
-        StackName=PROJECT
+        StackName=PROJECT2
     )
     print(response)
