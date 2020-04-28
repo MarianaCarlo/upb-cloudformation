@@ -11,7 +11,7 @@ Resources:
   MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: rpp-ip-cluster-lambda-role
+      RoleName: my-lambda-role
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -46,10 +46,10 @@ Resources:
             Parameters:
               Location: swagger.yaml
   
-  MyLambda1:
+  GetUserLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: my-lambda-1
+      FunctionName: get-user-lambda
       Runtime: python3.6
       CodeUri: ./build
       Handler: lambda1.handler
@@ -67,14 +67,21 @@ Resources:
               Path: /users
               Method: GET
   
-  MyLambda2:
+  GetUserLambda2:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Join ["-", [!Ref Project, "lambda-cf-1"]] 
+      FunctionName: get-user-lambda2
       Runtime: python3.6
       CodeUri: ./build
       Handler: lambda2.handler
       Role: !GetAtt MyLambdaRole.Arn
+      Events:
+          GetUsers:
+            Type: Api
+            Properties:
+              RestApiId: !Ref MyAPI
+              Path: /users/{user_name}
+              Method: GET
 
 Outputs:
   RoleARN:
