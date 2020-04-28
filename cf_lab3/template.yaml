@@ -60,28 +60,28 @@ Resources:
         Variables:
           MY_NAME: Mariana
       Events:
-          GetUsers:
+          GetUsers2: 
             Type: Api
             Properties:
               RestApiId: !Ref MyAPI
               Path: /users
               Method: GET
   
-  GetUserLambda2:
+  PostLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: get-user-lambda2
+      FunctionName: post-lambda
       Runtime: python3.6
       CodeUri: ./build
-      Handler: lambda2.handler
+      Handler: lambda3.handler
       Role: !GetAtt MyLambdaRole.Arn
       Events:
-          GetUsers:
+          PostUsers:
             Type: Api
             Properties:
               RestApiId: !Ref MyAPI
               Path: /users/{user_name}
-              Method: GET
+              Method: POST
 
 Outputs:
   RoleARN:
